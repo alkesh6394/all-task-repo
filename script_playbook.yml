@@ -1,0 +1,7 @@
+---
+ - name: Run a script
+   hosts: webserver1
+   tasks:
+      - name: rin a script through playbook
+        script: script1.sh
+               

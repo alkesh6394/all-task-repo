@@ -1,0 +1,15 @@
+---
+- name: Create a file and folder
+  hosts: server2
+  become: yes
+  tasks:
+    - name: Create a file
+      file:
+        path: "/tmp/alkesh.txt"
+        state: touch
+
+    - name: Create a folder
+      file:
+        path: "/home/ubuntu/anshul"
+        state: directory
+

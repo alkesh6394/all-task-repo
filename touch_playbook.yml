@@ -1,0 +1,9 @@
+---
+- name: Command to create a file
+  hosts: webserver1
+  tasks:
+    - name: Create a file
+      file:
+        path: "/home/webserver1/anshul.txt"
+        state: touch
+

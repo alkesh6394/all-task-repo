@@ -1,0 +1,12 @@
+---
+ - name: install nginx and tree through loop
+   hosts: server2
+   become: yes
+   tasks:
+      - name: install nginx and tree through loop
+        apt:
+            name: "{{ item }}"
+            state: absent
+        with_items:
+                - tree
+                - nginx

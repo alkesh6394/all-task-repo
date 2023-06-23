@@ -1,0 +1,378 @@
+=============================handson=====================================================
+1:Take a Students names file form the instructor
+2:Find names of students whose name ends as gupta, while ignoring case
+3:Find count of students whose name ends as Gupta
+4:Find students whose names starts with An
+5:Find students just after An
+6:Count the no. of line started with a ignore the case
+
+=================================solution of handson=======================================
+grep -i  "gupta$" grep.txt
+grep -i -c  "gupta$" grep.txt
+grep -i ^an grep.txt
+grep -i ^an -A 2 grep.txt
+grep -i ^a -c grep.txt
+
+
+
+
+
+
+sed 's/tiwari/singh/2' sed.txt
+sed -n 2p sed.txt
+sed -n '1~2p' sed.txt
+
+
+======================================assignment===============================
+Create a text editor utility, using which you can
+
+Add a line at top
+Add a line at bottom
+Add a line at specific line number
+Replace word
+Delete word
+Insert word
+Delete a line
+Delete a line containing a word
+
+
+./otTextEditor addLineTop <file> <line>
+./otTextEditor addLineBottom <file> <line>
+./otTextEditor addLineAt <file> <linenumber> <line>
+./otTextEditor updateFirstWord <file> <word1> <word2>
+./otTextEditor updateAllWords <file> <word1> <word2>
+./otTextEditor insertWord <file> <word1> <word2> <word to be inserted>
+./otTextEditor deleteLine <file> <line no>
+./otTextEditor deleteLine <file> <line no> <word>
+
+
+Also come with your own features of text editor
+
+
+
+#/bin/bash
+source /home/alkesh/texteditorfunction.sh
+set -x
+action=$1
+case $action in
+addlinetop)
+	file=$2
+	content=$3
+	addlinetop $file $content $addlinetop
+	# if [ $# -eq 3 ]
+	#  then
+	# if [ -f "$file" ]; then
+	# 	echo "$content" >>tmp.txt
+	# 	cat $file >>tmp.txt
+	# 	mv tmp.txt $file
+	# 	echo "line is added to the top of file"
+	# 	echo " `date` line is added to the top of file" >> logoftexteditor
+	# else
+	# 	echo "Sorry $file file  is not found"
+	# fi
+	# else
+	#   echo "this action only run when you give three argument"
+	# fi
+	;;
+addlinebottom)
+	file=$2
+	content=$3
+	addlinebottom $file $content
+	# if [ $# -eq 3 ]
+	# then
+	# if [ -f "$file" ]; then
+	# 	echo "$content" >>$file
+	# 	echo "line is added to the bottom"
+	# 	echo " `date` line is added to the bottom" >> logoftexteditor
+	# else
+	# 	echo "sorry $file is not found"
+	# fi
+	# else
+	#   echo "this action only run when you give three argument"
+	# fi
+	;;
+addlineat)
+	file=$2
+	linenumber=$3
+	content=$4
+	addlineat $file $linenumber $content
+	# if [ $# -eq 4 ]
+	#  then
+	# if [ -f "$file" ]; then
+	# 	sed -i "$linenumber i $content" $file
+	# 	echo "line is added to the file at $linenumber"
+	# 	echo " `date` line is added at $linenumber" >> logoftexteditor
+	# else
+	# 	echo "Sorry $file is not exist"
+	# fi
+	# else
+	#    echo "this action only run when you give four argument"
+	# fi
+	;;
+updatefirstword)
+	file=$2
+	word1=$3
+	replaceword=$4
+	updatefirstword $file $word1 $replaceword
+    # if [ $# -eq 4 ]
+	#  then
+	# if [ -f "$file" ]; then
+	# 	sed -i "s/$word1/$replaceword/1" $file
+	# 	echo "$word is replace by $replaceword in $file"
+	# 	echo " `date` $word is replace by $replaceword" >> logoftexteditor
+	# else
+	# 	echo "Sorry that $file is not exist"
+	# fi
+	# else
+	#    echo "this action only run when you give four argument"
+	# fi
+	;;
+updateallword)
+	file=$2
+	word1=$3
+	replaceword=$4
+	updateallword $file $word1 $replaceword
+	# if [ $# -eq 4 ]
+	#  then
+	# if [ -f "$file" ]; then
+	# 	sed -i "s/$word1/$replaceword/g" $file
+	# 	echo "$word is replace by $replaceword in $file"
+	# 	echo "`date` is replace by $replaceword in $file" >> logoftexteditor
+	# else
+	# 	echo "Sorry that $file is not exist"
+	# fi
+	# else
+	#   echo "this action only run when you give four argument"
+	# fi
+	;;
+deleteline)
+	file=$2
+	linenumber=$3
+	deleteline $file $linenumber
+	# if [ $# -eq 3 ]
+	# then
+	# if [ -f "$file" ]; then
+	# 	sed -i "${linenumber}d" $file
+	# 	echo "$linenumber is deleted form $file"
+	# 	echo "`date` $linenumber is deleted from $file" >> logoftexteditor
+	# else
+	# 	echo "Sorry that file is not exist"
+	# fi
+    # else
+	#     echo "this action only run when you give three argument"
+	# fi
+	;;
+deleteword)
+	file=$2
+	linenumber=$3
+	word=$4
+	deleteword $file $linenumber $word
+	# if [ $# -eq 4 ]
+	# then
+	# if [ -f "$file" ]; then
+	# 	sed -n "${linenumber}p" $file | sed -i "s/$word//i" $file
+	# 	echo "$word is deleted form $file"
+	# 	echo "`date` $word is deletd from $file" >> logoftexteditor
+	# else
+	# 	echo "Sorry $file is not exist"
+	# fi
+	# else
+	#     echo "this action only run when you give four argument"
+	# fi
+	;;
+insertword)
+	file=$2
+	word1=$3
+	word2=$4
+	wordinto=$5
+	insertword $file $word1 $word2 $wordinto
+	# if [ $# -eq 5 ]
+	# then
+	# if [ -f "$file" ]; then
+	# 	grep -i "${word1}\|${word2}" $file | sed -i "s/${word1}/${word1} ${wordinto}/I" $file
+	# 	echo "$wordinto is inserted into $file"
+	# 	echo "`date` $wordinto is inserted into $file">> logoftexteditor
+	# else
+	# 	echo "Sorry $file is not found"
+	# fi
+	# else
+	#     echo "this action only run when you give five argument"
+	# fi
+	;;
+
+*)
+	echo "sorry that is not function of text editor"
+	;;
+esac
+
+
+
+
+
+
+======================================function==========================================
+
+
+#!bin/bash
+function addlinetop()
+{
+      local file=$1
+      local content=$2
+ if [ $# -eq 3 ]
+	 then
+	if [ -f "$file" ]; then
+		echo "$content" >>tmp.txt
+		cat $file >>tmp.txt
+		mv tmp.txt $file
+		echo "line is added to the top of file"
+		echo " `date` line is added to the top of file" >> logoftexteditor
+	else
+		echo "Sorry $file file  is not found"
+	fi
+	else
+	  echo "this action only run when you give three argument"
+	fi
+
+}
+
+function addlinebottom()
+{
+       local file=$1
+      local content=$2
+	if [ $# -eq 3 ]
+	then
+	if [ -f "$file" ]; then
+		echo "$content" >>$file
+		echo "line is added to the bottom"
+		echo " `date` line is added to the bottom" >> logoftexteditor
+	else
+		echo "sorry $file is not found"
+	fi
+	else
+	  echo "this action only run when you give three argument"
+	fi
+
+}
+
+function addlineat()
+{
+        local file=$1
+	local linenumber=$2
+	local content=$3
+	if [ $# -eq 4 ]
+	 then
+	if [ -f "$file" ]; then
+		sed -i "$linenumber i $content" $file
+		echo "line is added to the file at $linenumber"
+		echo " `date` line is added at $linenumber" >> logoftexteditor
+	else
+		echo "Sorry $file is not exist"
+	fi
+	else
+	   echo "this action only run when you give four argument"
+	fi
+
+}
+
+function updatefirstword()
+{
+      local file=$1
+      local word1=$2
+	local replaceword=$3
+    if [ $# -eq 4 ]
+	 then
+	if [ -f "$file" ]; then
+		sed -i "s/$word1/$replaceword/1" $file
+		echo "$word is replace by $replaceword in $file"
+		echo " `date` $word is replace by $replaceword" >> logoftexteditor
+	else
+		echo "Sorry that $file is not exist"
+	fi
+	else
+	   echo "this action only run when you give four argument"
+	fi
+
+
+}
+
+function updateallword()
+{
+      local file=$1
+     local word1=$2
+     local replaceword=$3
+	if [ $# -eq 4 ]
+	 then
+	if [ -f "$file" ]; then
+		sed -i "s/$word1/$replaceword/g" $file
+		echo "$word is replace by $replaceword in $file"
+		echo "`date` is replace by $replaceword in $file" >> logoftexteditor
+	else
+		echo "Sorry that $file is not exist"
+	fi
+	else
+	  echo "this action only run when you give four argument"
+	fi
+
+}
+
+function deleteline()
+{
+        local file=$1
+	local linenumber=$2
+	if [ $# -eq 3 ]
+	then
+	if [ -f "$file" ]; then
+		sed -i "${linenumber}d" $file
+		echo "$linenumber is deleted form $file"
+		echo "`date` $linenumber is deleted from $file" >> logoftexteditor
+	else
+		echo "Sorry that file is not exist"
+	fi
+    else
+	    echo "this action only run when you give three argument"
+	fi
+
+}
+
+function deleteword()
+{
+       local file=$1
+      local linenumber=$2
+   local word=$3
+	if [ $# -eq 4 ]
+	then
+	if [ -f "$file" ]; then
+		sed -n "${linenumber}p" $file | sed -i "s/$word//i" $file
+		echo "$word is deleted form $file"
+		echo "`date` $word is deletd from $file" >> logoftexteditor
+	else
+		echo "Sorry $file is not exist"
+	fi
+	else
+	    echo "this action only run when you give four argument"
+	fi
+
+}
+
+function insertword()
+{
+        local file=$1
+      local word1=$2
+      local word2=$3
+	local wordinto=$4
+	if [ $# -eq 5 ]
+	then
+	if [ -f "$file" ]; then
+		grep -i "${word1}\|${word2}" $file | sed -i "s/${word1}/${word1} ${wordinto}/I" $file
+		echo "$wordinto is inserted into $file"
+		echo "`date` $wordinto is inserted into $file">> logoftexteditor
+	else
+		echo "Sorry $file is not found"
+	fi
+	else
+	    echo "this action only run when you give five argument"
+	fi
+
+}
+
+

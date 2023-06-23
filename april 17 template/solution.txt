@@ -1,0 +1,39 @@
+Create a template engine, that can generate values file and replace the variables provided as arguments
+
+./templateEngine.sh trainer.template key1=value1 key2=value2....
+
+
+trainer.template
+
+{{fname}} is trainer of {{topic}} 
+
+
+
+i.e 
+./templateEngine.sh trainer.template fname=abhishek topic=linux
+
+abhishek is trainer of linux 
+
+
+
+============================solution===========================================
+
+
+#!/bin/bash
+set -x
+template=$1 # ye template file same location pr rakhe hai 
+file_name=$2
+name=$(echo $file_name |awk -F = '{print $2}')
+cp template $name.template
+shift
+for i in $@
+do
+  key=$(echo $i | awk -F = '{print $1}')
+  value=$(echo $i | awk -F = '{print $2}')
+  sed -i "s/{{$key}}/$value/g" $name.template
+done
+# key_value1=$2
+# key_value2=$3
+# name=$(echo $key_value1 | awk -F = '{print $2}')
+# value=$(echo $key_value2 | awk -F = '{print $2}')
+# cp template $name.template

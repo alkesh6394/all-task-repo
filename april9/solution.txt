@@ -1,0 +1,105 @@
+ 
+ - UserManager
+  - Add a user
+  - Add group
+  - add user in group
+  - delete user
+  - delete group( if empty delete it otherwise list the user in group with warning message)
+  - delete user from group
+
+
+./Usermanager.sh adduser username
+./Usermanager.sh addgroup groupname
+./Usermanager.sh adduseringroup username group
+./Usermanager.sh deleteuser username
+./Usermanager.sh deletegroup groupname
+./Usermanager.sh deleteuserfromgroup username group_name
+
+
+solution
+#!/bin/bash
+action=$1
+case $action in
+   adduser)
+      user=$2
+      getent passwd $user
+      if [[ $? -eq 0 ]]
+        then
+           echo "sorry user already exist"
+      else
+             sudo useradd -m $user
+             echo "Successful user is created"
+      fi
+      ;;
+   addgroup)
+       group=$2
+       getent group $group
+       if [[ $? -eq 0 ]]
+        then
+            echo "group is already exist"
+        else
+           sudo addgroup $group
+           echo "$group is created"
+      fi
+      ;;
+   deleteuser)
+      user=$2
+      getent passwd $user
+      if [[ $? -eq 0 ]]
+          then
+                  sudo deluser $user
+                  echo "$user is deleted"
+      else
+            "Sorry we user is not exist"
+      fi
+      ;;
+   deletegroup)
+        group=$2
+    getent group $group
+   if [[ $? -eq 0 ]]
+   then 
+          sudo delgroup $group
+    else
+           echo "Sorry Group is not exist"
+  fi 
+     ;;
+   adduseringroup)
+           user=$2
+           group=$3
+           getent passwd $user
+           if [[ $? -eq 0 ]]
+               then
+                       getent group $group
+                       if [[ $? -eq 0 ]]
+                       then
+                               sudo usermod -aG $group $user
+                               echo "$user is added in $group"
+                        else
+                                echo "Sorry we can't add that user $user in $group because group $group is not exist"
+                        fi
+         else
+                 echo "Sorry that  user $user is not exist"
+        fi
+   ;;
+    deleteuserfromgroup)
+            user=$2
+            group=$3
+            getent passwd $user
+           if [[ $? -eq 1 ]]
+               then
+                       getent group $group
+                       if [[ $? -eq 0 ]]
+                       then
+                               sudo deluser $user $group
+                               echo "$user is delete from group"
+                        else
+                                echo "Sorry we can't delete that user $user from $group because that $group is not exist"
+                        fi
+         else
+                 echo "Sorry that  user $user is not exist"
+        fi
+      ;;
+    *)
+         echo "Invalid action"
+         ;;
+esac

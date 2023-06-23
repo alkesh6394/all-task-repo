@@ -1,0 +1,331 @@
+ASSIGNMENT 1 : Basic Linux Commands
+Create a utility(FileManager.sh) that will be able to
+
+Create a Directory
+Delete a Directory
+List Content of a Directory
+Only listfiles in a Directory
+Only listDirs in a Directory
+listAll(files and directory)
+
+For example
+
+./FileManager.sh addDir /tmp dir1
+./FileManager.sh addDir /tmp dir2
+./FileManager.sh addDir /tmp dir3
+./FileManager.sh listFiles /tmp
+./FileManager.sh listDirs /tmp
+./FileManager.sh listAll /tmp
+./FileManager.sh deleteDir /tmp dir3
+
+
+
+
+                        solution through case
+
+#!/bin/bash
+action=$1
+
+case $action in 
+	adddir)
+		path=$2
+		dir_name=$3
+		if [ -d "$path" ]
+		  then
+			  cd /$path
+			  mkdir $dir_name
+			  echo "$dir_name directory is created"
+	        else
+			echo "$path path is not exist where you want to create a directory"
+		  fi
+	;;
+       listfile)
+	       path=$2
+	       if [ -d "$path" ]
+	          then
+		       cd /$path
+		       ls -l
+		else
+			echo "Sorry that $path is not exist"
+	        fi
+	;;
+        listdir)
+		path=$2
+               if [ -d "$path" ]
+                  then
+                       cd /$path
+                       ls -l | grep '^d'
+                else
+                        echo "Sorry that $path is not exist"
+                fi
+        ;;
+     listall)
+	      path=$2
+               if [ -d "$path" ]
+                  then
+                       cd /$path
+                       ls -la
+                else
+                        echo "Sorry that $path is not exist"
+                fi
+        ;;
+	deletedir)
+	       path=$2
+	       dir_name=$3
+               if [ -d "$path" ]
+                  then
+                       cd /$path
+		       if [ -d "$dir_name" ]
+		            then
+				 rm -rf $dir_name
+				  echo "$dir_name is deleted"
+		       else
+			       echo "sorry $dir_name directory is not exist"
+			  fi
+
+                else
+                        echo "Sorry that $path is not exist"
+                fi
+            ;;
+
+       *)
+	       echo "it is not action of filemanager"
+	       
+	       
+	       
+	       
+	;;
+esac
+
+
+
+
+
+Update FileManager to process Files as well
+
+Create a file
+Add content to file
+Add conent at the begining of the file
+Show top n lines of a file
+Show last n lines of a file
+Show contents of a specific line number
+Show conteint of a specfific line number range
+Move/Copy file from one location to another
+Delete file
+
+For example
+
+./FileManager.sh addFile /tmp/dir1 file1.txt
+./FileManager.sh addContentToFile /tmp/dir1 file1.txt "Additional Content"
+./FileManager.sh addContentToFileBegining /tmp/dir1 file1.txt "Additional Content"
+./FileManager.sh showFileBeginingContent /tmp/dir1 file1.txt 5
+./FileManager.sh showFileEndContent /tmp/dir1 file1.txt 5
+./FileManager.sh showFileContentAtLine /tmp/dir1 file1.txt 10
+./FileManager.sh showFileContentForLineRange /tmp/dir1 file1.txt 5 10
+./FileManager.sh moveFile /tmp/dir1/file1.txt /tmp/dir1/file2.txt
+./FileManager.sh moveFile /tmp/dir1/file2.txt /tmp/dir2/
+./FileManager.sh copyFile /tmp/dir2/file2.txt /tmp/dir1/
+./FileManager.sh copyFile /tmp/dir1/file2.txt /tmp/dir1/file3.txt
+./FileManager.sh clearFileContent /tmp/dir1 file3.txt
+./FileManager.sh deleteFile /tmp/dir1 file2.txt
+
+
+
+
+
+
+
+#!/bin/bash
+action=$1
+case $action in 
+	adddir)
+		path=$2
+		dir_name=$3
+		if [ -d "$path" ]
+		  then
+			  cd /$path # not necesary
+			  mkdir $dir_name
+			  echo "$dir_name directory is created"
+	        else
+			echo "$path path is not exist where you want to create a directory"
+		  fi
+	;;
+       listfile)
+	       path=$2
+	       if [ -d "$path" ]
+	          then
+		       cd /$path ## not necesary
+		       ls -l
+		else
+			echo "Sorry that $path is not exist"
+	        fi
+	;;
+        listdir)
+		path=$2
+               if [ -d "$path" ]
+                  then
+                       cd /$path
+                       ls -l | grep '^d'
+                else
+                        echo "Sorry that $path is not exist"
+                fi
+        ;;
+     listall)
+	      path=$2
+               if [ -d "$path" ]
+                  then
+                       cd /$path
+                       ls -la
+                else
+                        echo "Sorry that $path is not exist"
+                fi
+        ;;
+	deletedir)
+	       path=$2
+	       dir_name=$3
+               if [ -d "$path" ]
+                  then
+                       cd /$path
+		       if [ -d "$dir_name" ]
+		            then
+				 rm -rf $dir_name
+				  echo "$dir_name is deleted"
+		       else
+			       echo "sorry $dir_name directory is not exist"
+			  fi
+
+                else
+                        echo "Sorry that $path is not exist"
+                fi
+            ;;
+	 addfile)
+                 path=$2
+		 file_name=$3
+		   if [ -d "$path" ]
+			then
+				cd /$path
+			     touch $file_name
+			     echo "$file_name file is created"
+		    else
+			 echo "sorry $path is not exist how i can create a file "
+		    fi
+	  ;;
+
+   addcontenttofile)
+             path=$2
+             file_name=$3
+             content=$4
+             if [ -d "$path" ]
+	      then
+		      cd /$path
+	         echo "$content" >> $file_name
+                   echo "content is added to the $file_name"
+             else
+                 echo "Sorry that $path is not exist"
+             fi
+	 ;;
+          
+        addcontenttofilebegining)
+		     path=$2
+		     file_name=$3
+		     content=$4
+		     if [ -d "$path" ]
+		        then
+			    cd /$path
+		       	    echo "$content"  >> $file_name
+			    echo "content is added to the beginning of the $file_name"
+		    else
+			  echo "Sorry $path is not exist"
+		   fi
+        ;;
+      showfilebeginingcontent)
+	      path=$2
+	      file_name=$3
+	      line=$4
+	      if [ -d "$path" ]
+	          then
+			  cd /$path
+		      head -n $line $file_name 
+         	else
+			  echo "sorry $path is not exist"
+	     fi
+	  ;;
+    showfileendcontent)
+       	      path=$2
+              file_name=$3
+              line=$4
+              if [ -d "$path" ]
+                  then
+			  cd /$path
+                      top -n $line $file_name
+                else
+                          echo "sorry $path is not exist"
+             fi
+          ;;
+     showfilecontentatline)
+		       path=$2
+		       file_name=$3
+		       line=$4
+		        if [ -d "$path" ]
+                           then
+                                cd /$path
+                                      head -n $line $file_name | tail -n +$line
+                         else
+                                echo "sorry $path is not exist"
+             fi
+          ;;
+  showfilecontentforlinerange)
+		       path=$2
+                       file_name=$3
+                       line=$4
+		       line1=$5
+                        if [ -d "$path" ]
+                           then
+                                cd /$path
+                                      head -n $line1 $file_name | tail -n +$line
+                         else
+                                echo "sorry $path is not exist"
+             fi
+          ;;
+          movefile)
+	       	       path1=$2
+		           path2=$3
+		       mv $path1 $path2
+        ;;
+	copyfile)
+	               path1=$2
+		       file_name=$3
+                       path2=$4
+		       cd /$path1
+                       cp $file_name $path2
+        ;;
+    deletefile)
+	    path=$2
+	    file_name=$3
+	    if [ -d "$path" ]
+	        then
+		       cd /$path	
+			rm -r $file_name
+	     else
+		     "sorry not exist"
+	   fi
+	  ;;
+	 clearcontentoffile)
+	          path=$2
+			  file_name=$3
+			  if [ -d "$path" ]
+			      then 
+				      rm -r $file_name
+					  touch $file_name
+			   else
+			   echo "$path does not exist"
+			   fi
+		;;
+  
+
+       *)
+	       echo "it is not action of filemanager"
+	;;
+esac
+
+

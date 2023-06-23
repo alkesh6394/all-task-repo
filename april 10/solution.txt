@@ -1,0 +1,211 @@
+1.Write the table for any input number. Number should be taken from command line argument.
+#!/bin/bash
+table of any number
+
+num=$1
+for (( i=1; i<=10; i++ ))
+do 
+      echo "$(( $num * $i ))"
+done
+
+
+2:Write the table for any input number. Number should be taken from command line argument via whileloop
+
+
+# via while loop
+i=1
+while [ $i -le 10 ]
+do
+       echo "Multiple of $num*$i is $(( $num * $i))"
+       i=$(( $i+1))
+done
+
+
+
+3:Run Calculator Until User Will Not Want To Exit
+
+
+#done
+echo "Press + for sum"
+echo "Press - for sub"
+echo "Press * for mul"
+echo "Press / for div"
+choice="yes"
+while [ $choice == "yes" ]
+do
+echo "please enter your action"
+read action
+case $action in
+   "+")
+      echo "Please enter first number"
+      read num1
+      echo "Please enter the second number"
+      read num2
+      result=$(($num1+$num2))
+      echo "Result is $result"
+     # echo "Do you want continue"
+     # read choice
+      ;;
+   "-")
+       echo "Please enter first number"
+      read num1
+      echo "Please enter the second number"
+      read num2
+      result=$(($num1-$num2))
+      echo "Result is $result"
+      # echo "Do you want continue"
+     # read choice
+      ;;
+   "*")
+       echo "Please enter first number"
+      read num1
+      echo "Please enter the second number"
+      read num2
+      result=$(($num1*$num2))
+      echo "Result is $result"
+	   # echo "Do you want continue"
+     # read choice
+      ;;
+   "/")
+       echo "Please enter first number"
+      read num1
+      echo "Please enter the second number"
+      read num2
+      result=$(($num1/$num2))
+      echo "Result is $result"
+      # echo "Do you want continue"
+     # read choice
+     ;;
+      *)
+   echo  "Invalid action"
+     ;;
+esac
+ echo "Do you want continue"
+ read choice
+
+done
+
+
+
+
+
+4:Please find your assignment for today
+Create a shell script to generate a star, it will take 2 arguments size & type
+
+./drawStar.sh 5 t1
+*
+**
+***
+****
+*****
+
+./drawStar.sh 5 t2
+    *
+   **
+  ***
+ ****
+*****
+
+
+./drawStar.sh 5 t3
+*****
+****
+***
+**
+*
+
+
+
+
+solution
+
+
+#!/bin/bash
+size=$1
+type=$2
+
+case $type in 
+	t1)
+		for (( i=1; i<=$size; i++ ))
+		  do 
+		     for (( j=1 ;j<=$i; j++ ))
+			do
+			    echo -n "*"
+			 done
+			 echo
+	        done
+		;;
+
+	t2)
+	     
+		for (( i=$size; i>=1; i-- ))
+		    do
+			    for (( j=$i; j>=1; j-- ))
+				   do
+					   echo -n "*"
+			     done
+			     echo
+	      done
+	      ;;
+	t3) 
+		for (( i=1; i<=$size; i++ ))
+		  do
+			  for (( j=1; j<=$size-$i; j++ ))
+			    do
+				    echo -n " "
+			  done
+				for (( c=1; c<=$i; c++ ))
+				 do
+					 echo -n "*"
+			         done
+				 echo
+	        done
+		;;
+       *)
+	       echo "invalid type"
+	       ;;
+esac
+
+
+
+
+4:Create a shell script that will take take a number and print below output depending on the conditions
+
+tom -> If number is divisible by 3
+cat -> If number is divisible by 5
+tomcat -> If number is divisible by 15
+
+
+i.e
+./printTomcat.sh 7
+
+./printTomcat.sh 6
+tom
+
+./printTomcat.sh 10
+cat
+
+./printTomcat.sh 30
+tomcat
+
+
+solution
+
+#!/bin/bash
+set -x
+number=$1
+if [[ $number%3 -eq 0 && $number%5 -ne 0 && $number%15 -ne 0 ]]
+then
+        echo "TOM"
+elif [[ $number%5 -eq 0 && $number%3 -ne 0 &&  $number%15 -ne 0 ]]
+then
+        echo "CAT"
+elif [[ $number%15 -eq 0 && $number%3 -ne 0 &&  $number%5 -ne 0 ]]
+then
+        echo "TOMCAT"
+else
+        echo " "
+fi
+
+
+              

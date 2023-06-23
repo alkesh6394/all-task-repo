@@ -1,0 +1,131 @@
+./palindrome.sh rotator
+output - it is a palindrome phrase.
+./palindrome.sh developer
+output - it is not a palindrome phrase.
+
+
+
+=======================================solution=======================================
+#!/bin/bash
+set -x
+word=$1
+# rev=$(echo $word | rev )
+# if [[ $rev == $word ]]
+#  then
+# 	echo "YES $word is palindrome phrase"
+# else
+# 	echo "NO $word is not a palindome phrase"
+# fi
+
+
+
+Part A
+Please find your assignment for today
+
+Create a process management utility, to find
+
+
+Top n process by memory
+Top n process by cpu
+Kill process having least priority
+running duration of a process by name or pid
+List orphan process if any
+List zoombie process if any
+Kill process by name or pid
+List process that are waiting for the resources
+
+
+i.e.
+./ otProcessManager topProcess 5 memory
+./ otProcessManager topProcess 10 cpu
+./ otProcessManager killLeastPriorityProcess 
+./ otProcessManager RunningDurationProcess <processName>/<processID>
+./ otProcessManager listOrphanProcess
+./ otProcessManager listZoombieProcess
+./ otProcessManager killProcess <processName>/<processID>
+./ otProcessManager ListWaitingProcess
+
+
+
+
+
+
+
+
+===============solution============================
+#/bin/bash
+set -x
+action=$1
+
+case $action in
+topprocess)
+     line=$2
+     which=$3
+     if [[ $which == "memory" ]]; then
+          top -o %MEM | tail -n +7 | head -n $line
+     else
+          top -o %CPU | tail -n +7 | head -n $line
+     fi
+     ;;
+listorphanprocess)
+     ps -ef | awk '{if ($3 == 1) print $0}'
+     ;;
+killprocess)
+     process=$2
+     if [[ "$process" =~ ^[0-9]+$ ]]; then
+          kill -9 $process
+     else
+          pkill -9 $process
+     fi
+     ;;
+runningdurationprocess)
+     process=$2
+     if [[ "$process" =~ ^[0-9]+$ ]]; then
+          ps -p $process -o etime
+     else
+          ps -C $process -o etime
+     fi
+     ;;
+killLeastPriorityProcess)
+    ps -le | awk '{print $8,$4}' |tail -n +2 | sort -n | awk '{print $2}' | tail -n  3 >> kill.txt
+    value=$(cat kill.txt)
+    for i in $value
+      do
+        sudo kill -9 $i
+     done
+     ;;
+listZoombieProcess)
+     ps aux | grep "Z|defunct"
+     ;;
+
+*)
+     echo "sorry that is not in process management"
+     ;;
+esac
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# ps -eo state,pid,cmd | grep "^D"

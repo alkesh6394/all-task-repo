@@ -1,0 +1,252 @@
+Create a personal Udhaar manager utility, with below features
+
+Feed into system how much udhaar is someone taking from you
+Feed into system how much udhaar is returned by whoom
+List down all the transactions happened for a person
+List down status of udhaar of all people
+
+Come with your own enhancements
+=====================================solution=============================================
+#!/bin/bash
+
+source function.sh
+
+while true
+do
+
+    echo "Select an option:"
+    echo "1. Add udhaar"
+    echo "2. Return udhaar"
+    echo "3. List transactions for a person"
+    echo "4. List udhaar status for all people"
+    echo "5. Current balance for a person"
+    echo "6. Exit"
+    
+    read choice
+    
+    case $choice in
+        1)
+            add_udhaar
+            ;;
+        2)
+            return_udhaar
+            ;;
+        3)
+            list_transactions
+            ;;
+        4)
+            list_status
+            ;;
+        5)
+            current_balance
+            ;;
+        6)
+            exit 0
+            ;;
+        *)
+            echo "Invalid option"
+            ;;
+    esac
+    
+done
+
+=============================function here================================
+
+
+add_udhaar(){
+    echo "Enter the name of the person taking udhaar:"
+    read name
+    echo "Enter the amount of udhaar taken:"
+    read amount
+    if [ -f "$name.um" ]; then
+        echo "`date` "+"$amount" >> "$name.um"
+    else
+        touch ${name.um}
+        echo "`date` "+"$amount" >> "$name.um"
+    fi
+}
+
+return_udhaar(){
+    echo "Enter the name of the person returning udhaar:"
+    read name
+    echo "Enter the amount of udhaar returned:"
+    read amount
+    echo "`date` "-"$amount" >> "$name.um"
+}
+
+list_transactions() {
+    echo "Enter the name of the person to list transactions for:"
+    read name
+    echo "Transactions for $name:"
+    cat "$name.um"
+}
+
+list_status() {
+    echo "Udhaar status for all people:"
+    find . -name "*.um" > temp.txt
+    line=$(wc -l < temp.txt)
+    for (( i=1; i<=$line; i++ ))
+    do
+        sed -n ${i}p temp.txt
+        cat `sed -n ${i}p temp.txt`
+    done
+}
+
+current_balance(){
+    echo "Enter the name of the person to list transactions for:"
+    read name
+    awk '{print $NF}' "$name.um" > balance.txt
+    balance=0
+    line=$(wc -l < balance.txt)
+    for (( i=1; i<=$line; i++ ))
+    do
+        single_balance=$(sed -n ${i}p balance.txt)
+        balance=$((balance+(single_balance)))
+    done
+    echo "Remainig $balance to be paid"
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+===========================my solution===========================================
+#!/bin/bash
+source udharmanagerfunction.sh
+echo "Press 1 FOR ADDUDHAR"
+echo "Press 2 FOR ADDRETURN"
+echo "Press 3 FOR HOW MUCH UDHAAR"
+echo "Press 4 FOR HOW MUCH RETURN"
+echo "PRESS 5 FOR ALL TRANSITION"
+choice="yes"
+while [[ $choice == "yes" ]]; do
+	echo "please enter your action"
+	read action
+	case $action in
+	"1")
+		addudhar
+		;;
+	"2")
+		addreturn
+		;;
+	"3")
+		echo "PLEASE ENTER THE NAME OF PERSON"
+		read name
+		howmuchudhar $name
+		;;
+	"4")
+		echo "PLEASE ENTER THE NAME OF PERSON"
+		read name
+		howmuchreturn $name
+		;;
+	"5")
+		echo "PLEASE ENTER THE NAME OF PERSON"
+		read name
+		allthetransactions $name
+		;;
+	*)
+		echo "SORYY THIS PROCESS IS NOT IN UDAHAR MANGAER UTILITY"
+		;;
+	esac
+	echo "DO YOU WANT TO CONTINUE"
+	read choice
+done
+
+
+
+
+
+
+
+
+
+===============================my function=================================
+function addudhar() {
+	touch udharamount.txt
+	echo "FOR UDHAR PLEASE FILL BELOW COLUMN:"
+	echo -n "PLEASE ENTER YOUR NAME:"
+	read name
+	echo -n "HOW MUCH MONEY DO YOU WANT:"
+	read balance
+	echo "$name-$balance" >>udharamount.txt
+}
+function addreturn() {
+	touch returnamount.txt
+	echo "FOR RETURN THE AMOUNT PLEASE FILL BELOW COLUMN:"
+	echo -n "PLEASE ENTER YOUR NAME:"
+	read name
+	echo -n "PLEASE ENTER RETURN AMOUNT:"
+	read balance
+	echo "$name-$balance" >>returnamount.txt
+}
+function howmuchudhar() {
+	local names=$1
+	grep -i "$names" udharamount.txt
+	if [[ $? -eq 0 ]]; then
+		grep -i "$names" udharamount.txt | awk -F - '{print $2}' >howmuch.txt
+		sum=0
+		while read line; do
+			sum=$(($sum + $line))
+		done <howmuch.txt
+		grep -i "$name" returnamount.txt | awk -F - '{print $2}' >howmuch1.txt
+		returnbalance=0
+		while read line; do
+			returnbalance=$(($returnbalance + $line))
+		done <howmuch1.txt
+		remainingbalance=$(($sum - $returnbalance))
+		echo "TOTAL AMOUNT $names IS UDHAAR: $remainingbalance"
+	else
+		echo "SORRY THAT $names IS NOT IN YOUR UDHAAR LIST"
+	fi
+	rm -r howmuch.txt
+	rm -r howmuch1.txt
+}
+function howmuchreturn() {
+	local name=$1
+	grep -i "$name" udharamount.txt
+	if [[ $? -eq 0 ]]; then
+		grep -i "$name" returnamount.txt | awk -F - '{print $2}' >howmuch.txt
+		returnbalance=0
+		while read line; do
+			returnbalance=$(($returnbalance + $line))
+		done <howmuch.txt
+		echo "TOTAL AMOUNT RETURN BY $name $returnbalance"
+		grep -i "$name" udharamount.txt | awk -F - '{print $2}' >howmuch1.txt
+		sum=0
+		while read line; do
+			sum=$(($sum + $line))
+		done <howmuch1.txt
+		remainingbalance=$(($sum - $returnbalance))
+		echo "$name YOUR REAMINING BALANCE AFTER RETURN IS: $remainingbalance"
+	else
+		echo "SORRY THAT $name IS NOT IN YOUR UDHAAR LIST"
+	fi
+	rm howmuch.txt
+	rm howmuch1.txt
+}
+function allthetransactions() {
+	local name=$1
+	grep -i "$name" udharamount.txt >udharhistory.txt
+	grep -i "$name" returnamount.txt >udharhistory1.txt
+	echo "HERE TOTAL UDHAAR AMOUNT"
+	cat udharhistory.txt
+	echo "HERE TOTAL RETURN AMOUNT"
+	cat udharhistory1.txt
+   	rm udharhistory.txt
+	rm udharhistory1.txt
+}

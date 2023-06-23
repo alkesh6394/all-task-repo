@@ -1,0 +1,114 @@
+WAP to find count of alphabets in a file
+
+if the content of file names.txt is below
+
+sandeep
+ravinder
+The outcome of script would be
+
+./findAlpabetCounts.sh names.txt
+2 a
+2 d
+3 e
+1 i
+2 n
+1 p
+2 r
+1 s
+1 v
+Add other capabilities
+
+Find only vowels
+
+./findAlpabetCounts.sh -f v names.txt
+2 a
+3 e
+1 i
+Find only consonants
+
+./findAlpabetCounts.sh -f c names.txt
+2 d
+2 n
+1 p
+2 r
+1 s
+1 v
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#!/bin/bash
+action=$1
+case $action in
+countcharacter)
+     filename=$2
+     for i in {a..z}; do
+          count=$(tr -cd "$i" <$filename | wc -c)
+          if [[ $count -eq 0 ]]; then
+               continue
+          else
+               echo "$i-$count"
+          fi
+     done
+     ;;
+vowel)
+     filename=$2
+     for i in {a,e,i,o,u}; do
+          count=$(tr -cd "$i" <$filename | wc -c)
+          if [[ $count -eq 0 ]]; then
+               continue
+          else
+               echo "$i-$count"
+          fi
+     done
+     ;;
+const)
+     filename=$2
+     for i in {b,c,d,f,g,h,j,k,l,m,n,p,q,r,s,t,v,w,x,y,z}; do
+          count=$(tr -cd "$i" <$filename | wc -c)
+          if [[ $count -eq 0 ]]; then
+               continue
+          else
+               echo "$i-$count"
+          fi
+     done
+     ;;
+
+*)
+     echo "SORRY INVALID ACTION"
+     ;;
+esac
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+======================================read by a file line by line=========================
+#!/bin/bash
+set -x
+filename=$1
+while read line
+do
+        echo $line
+done<$filename
+

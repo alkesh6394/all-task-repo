@@ -1,0 +1,12 @@
+---
+- hosts: all
+  gather_facts: false
+  tasks:
+    - name: Ping-Pong Message
+      raw: echo "pong"
+      register: ping_pong_output
+
+    - name: Display Output
+      debug:
+        var: ping_pong_output.stdout_lines[0]
+
